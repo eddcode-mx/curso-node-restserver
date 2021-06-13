@@ -1,16 +1,26 @@
 const express = require('express');
+require('dotenv').config();
+
+const {dbConnection} = require('../database/config');
 
 class Server {
     constructor() {
         this.app = express();
-        this.port = 8080;
+        this.port = process.env.PORT;
         this.usuariosPath = '/api/usuarios';
+
+        // Conectar a base de datos
+        this.conectarDB();
 
         // Middlewares
         this.middlewares();
 
         // Rutas de mi aplicacion
         this.routes();
+    }
+
+    async conectarDB() {
+        await dbConnection();
     }
 
     middlewares() {
@@ -27,7 +37,7 @@ class Server {
 
     listen() {
         this.app.listen(this.port, () => {
-            console.log('Escuchando puerto: ', this.port);
+            console.log('Escuchando puerto: ', this.port.blue);
         });
     }
 }
